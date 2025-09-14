@@ -31,9 +31,9 @@ authenticator = stauth.Authenticate(
 )
 
 # --------------------------
-# LOGIN (rendered in sidebar)
+# LOGIN (for v0.2.1 → string "sidebar")
 # --------------------------
-name, authentication_status, username = authenticator.login("Login", location=st.sidebar)
+name, authentication_status, username = authenticator.login("Login", "sidebar")
 
 if authentication_status:
     role = credentials["usernames"][username]["role"]
