@@ -3,44 +3,46 @@ import wikipedia
 import streamlit_authenticator as stauth
 
 # --------------------------
-# USER CREDENTIALS (plain text for demo)
+# USER CREDENTIALS (hashed passwords)
 # --------------------------
-# NOTE: plain-text passwords are for quick testing only.
+# To generate new hashes: 
+# >>> import streamlit_authenticator as stauth
+# >>> stauth.Hasher(["admin123", "user123"]).generate()
 credentials = {
     "usernames": {
         "admin": {
-            "email": "admin@example.com",   # required for v0.2.1
             "name": "Administrator",
-            "password": "admin123",         # demo password
+            "password": "$2b$12$gA.0RhPaK0jvNhbbFoj7XOi7NUjN8IkYz3XzMmwFhtdl10EZw0rEy",  # hash for admin123
             "role": "admin"
         },
         "bhavya": {
-            "email": "bhavya@example.com",  # required for v0.2.1
             "name": "Bhavya",
-            "password": "user123",          # demo password
+            "password": "$2b$12$sBj86ZqT6CM3KrHmkWAwKe/xMfRhCA7A5FKsoMRsYyPLAVBbk8AxC",  # hash for user123
             "role": "user"
         }
     }
 }
 
-# Create authenticator
+# --------------------------
+# AUTHENTICATOR
+# --------------------------
 authenticator = stauth.Authenticate(
-    credentials,
-    "threat_app",   # cookie name
-    "abcdef",       # cookie key
+    credentials=credentials,
+    cookie_name="threat_app",
+    key="abcdef",
     cookie_expiry_days=1
 )
 
 # --------------------------
-# LOGIN (use string "sidebar" for v0.2.1)
+# LOGIN FORM
 # --------------------------
-name, authentication_status, username = authenticator.login("Login", "sidebar")
+name, authentication_status, username = authenticator.login("Login", location="sidebar")
 
 if authentication_status:
     role = credentials["usernames"][username]["role"]
 
-    st.sidebar.success(f"Welcome {name} ({role})")
-    authenticator.logout("Logout", "sidebar")
+    st.sidebar.success(f"✅ Welcome {name} ({role})")
+    authenticator.logout("Logout", location="sidebar")
 
     # --------------------------
     # COMMON FEATURE: Chatbot
@@ -87,10 +89,10 @@ if authentication_status:
     if role == "admin":
         st.markdown("---")
         st.subheader("🔐 Admin Panel")
-        st.info("Admin-only area: later you can add logs, user management, retrain model, etc.")
+        st.info("Admin-only area: add logs, user management, retrain model, etc.")
 
 elif authentication_status is False:
     st.error("❌ Username/password is incorrect")
 
 elif authentication_status is None:
-    st.warning("Please enter your username and password")
+    st.warning("ℹ️ Please enter your username and password")
