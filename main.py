@@ -3,18 +3,20 @@ import wikipedia
 import streamlit_authenticator as stauth
 
 # --------------------------
-# USER CREDENTIALS (demo only)
+# USER CREDENTIALS (hashed)
 # --------------------------
 credentials = {
     "usernames": {
         "admin": {
             "name": "Administrator",
-            "password": "admin123",  # plain password for demo
+            # hash for "admin123"
+            "password": "$2b$12$gA.0RhPaK0jvNhbbFoj7XOi7NUjN8IkYz3XzMmwFhtdl10EZw0rEy",
             "role": "admin"
         },
         "bhavya": {
             "name": "Bhavya",
-            "password": "user123",   # plain password for demo
+            # hash for "user123"
+            "password": "$2b$12$sBj86ZqT6CM3KrHmkWAwKe/xMfRhCA7A5FKsoMRsYyPLAVBbk8AxC",
             "role": "user"
         }
     }
@@ -29,12 +31,9 @@ authenticator = stauth.Authenticate(
 )
 
 # --------------------------
-# LOGIN (safe version)
+# LOGIN (stable API)
 # --------------------------
-# Pass location as keyword argument
-name, authentication_status, username = authenticator.login("Login", location="sidebar")
-# If this still errors, uncomment the next line instead:
-# name, authentication_status, username = authenticator.login("Login", location=st.sidebar)
+name, authentication_status, username = authenticator.login("Login", location=st.sidebar)
 
 if authentication_status:
     role = credentials["usernames"][username]["role"]
@@ -69,26 +68,4 @@ if authentication_status:
     user_input = st.text_input("Ask me anything:")
 
     if user_input:
-        st.session_state.messages.append({"role": "user", "content": user_input})
-        bot_response = get_wikipedia_summary(user_input)
-        st.session_state.messages.append({"role": "bot", "content": bot_response})
-
-    for msg in st.session_state.messages:
-        if msg["role"] == "user":
-            st.markdown(f"**You:** {msg['content']}")
-        else:
-            st.markdown(f"**Bot:** {msg['content']}")
-
-    # --------------------------
-    # EXTRA: Admin-only Section
-    # --------------------------
-    if role == "admin":
-        st.markdown("---")
-        st.subheader("🔐 Admin Panel")
-        st.info("Here you can add features like viewing logs, managing users, etc.")
-
-elif authentication_status is False:
-    st.error("❌ Username/password is incorrect")
-
-elif authentication_status is None:
-    st.warning("Please enter your username and password")
+        st.session_state.messages.append({"role": "user", "c_
