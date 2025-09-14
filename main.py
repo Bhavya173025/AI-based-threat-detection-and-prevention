@@ -3,20 +3,19 @@ import wikipedia
 import streamlit_authenticator as stauth
 
 # --------------------------
-# USER CREDENTIALS (hashed passwords)
+# USER CREDENTIALS (DEMO - plain text)
 # --------------------------
+# NOTE: plain-text credentials are for quick testing only.
 credentials = {
     "usernames": {
         "admin": {
             "name": "Administrator",
-            # hash for "admin123"
-            "password": "$2b$12$gA.0RhPaK0jvNhbbFoj7XOi7NUjN8IkYz3XzMmwFhtdl10EZw0rEy",
+            "password": "admin123",   # demo password
             "role": "admin"
         },
         "bhavya": {
             "name": "Bhavya",
-            # hash for "user123"
-            "password": "$2b$12$sBj86ZqT6CM3KrHmkWAwKe/xMfRhCA7A5FKsoMRsYyPLAVBbk8AxC",
+            "password": "user123",    # demo password
             "role": "user"
         }
     }
@@ -25,14 +24,15 @@ credentials = {
 # Create authenticator
 authenticator = stauth.Authenticate(
     credentials,
-    "threat_app",   # Cookie name
-    "abcdef",       # Key for cookie
+    "threat_app",   # cookie name
+    "abcdef",       # cookie key
     cookie_expiry_days=1
 )
 
 # --------------------------
-# LOGIN (for v0.2.1 → string "sidebar")
+# LOGIN (v0.2.1 expects "main" or "sidebar" string)
 # --------------------------
+# Using "sidebar" renders the form in the sidebar
 name, authentication_status, username = authenticator.login("Login", "sidebar")
 
 if authentication_status:
@@ -86,7 +86,7 @@ if authentication_status:
     if role == "admin":
         st.markdown("---")
         st.subheader("🔐 Admin Panel")
-        st.info("Here you can add features like viewing logs, managing users, etc.")
+        st.info("Admin-only area: later you can add logs, user management, retrain model, etc.")
 
 elif authentication_status is False:
     st.error("❌ Username/password is incorrect")
