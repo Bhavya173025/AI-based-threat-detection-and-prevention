@@ -9,12 +9,12 @@ credentials = {
     "usernames": {
         "admin": {
             "name": "Administrator",
-            "password": stauth.Hasher(["admin123"]).generate()[0],  # Admin password
+            "password": "admin123",  # plain password for demo
             "role": "admin"
         },
         "bhavya": {
             "name": "Bhavya",
-            "password": stauth.Hasher(["user123"]).generate()[0],  # User password
+            "password": "user123",   # plain password for demo
             "role": "user"
         }
     }
@@ -44,7 +44,6 @@ if authentication_status:
     # --------------------------
     st.title("📚 Wikipedia Chatbot")
 
-    # Initialize chat history in session state
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
@@ -64,7 +63,6 @@ if authentication_status:
         except Exception:
             return "Oops, something went wrong."
 
-    # User input
     user_input = st.text_input("Ask me anything:")
 
     if user_input:
@@ -72,7 +70,6 @@ if authentication_status:
         bot_response = get_wikipedia_summary(user_input)
         st.session_state.messages.append({"role": "bot", "content": bot_response})
 
-    # Display chat history
     for msg in st.session_state.messages:
         if msg["role"] == "user":
             st.markdown(f"**You:** {msg['content']}")
