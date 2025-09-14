@@ -3,7 +3,7 @@ import wikipedia
 import streamlit_authenticator as stauth
 
 # --------------------------
-# USER CREDENTIALS (hashed)
+# USER CREDENTIALS (hashed passwords)
 # --------------------------
 credentials = {
     "usernames": {
@@ -31,7 +31,7 @@ authenticator = stauth.Authenticate(
 )
 
 # --------------------------
-# LOGIN (stable API)
+# LOGIN (rendered in sidebar)
 # --------------------------
 name, authentication_status, username = authenticator.login("Login", location=st.sidebar)
 
@@ -65,7 +65,31 @@ if authentication_status:
         except Exception:
             return "Oops, something went wrong."
 
+    # User input
     user_input = st.text_input("Ask me anything:")
 
     if user_input:
-        st.session_state.messages.append({"role": "user", "c_
+        st.session_state.messages.append({"role": "user", "content": user_input})
+        bot_response = get_wikipedia_summary(user_input)
+        st.session_state.messages.append({"role": "bot", "content": bot_response})
+
+    # Display chat history
+    for msg in st.session_state.messages:
+        if msg["role"] == "user":
+            st.markdown(f"**You:** {msg['content']}")
+        else:
+            st.markdown(f"**Bot:** {msg['content']}")
+
+    # --------------------------
+    # EXTRA: Admin-only Section
+    # --------------------------
+    if role == "admin":
+        st.markdown("---")
+        st.subheader("🔐 Admin Panel")
+        st.info("Here you can add features like viewing logs, managing users, etc.")
+
+elif authentication_status is False:
+    st.error("❌ Username/password is incorrect")
+
+elif authentication_status is None:
+    st.warning("Please enter your username and password")
