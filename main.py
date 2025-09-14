@@ -29,9 +29,12 @@ authenticator = stauth.Authenticate(
 )
 
 # --------------------------
-# LOGIN (moved to sidebar)
+# LOGIN (safe version)
 # --------------------------
-name, authentication_status, username = authenticator.login("Login", "sidebar")
+# Pass location as keyword argument
+name, authentication_status, username = authenticator.login("Login", location="sidebar")
+# If this still errors, uncomment the next line instead:
+# name, authentication_status, username = authenticator.login("Login", location=st.sidebar)
 
 if authentication_status:
     role = credentials["usernames"][username]["role"]
