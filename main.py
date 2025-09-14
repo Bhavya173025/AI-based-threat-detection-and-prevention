@@ -3,19 +3,21 @@ import wikipedia
 import streamlit_authenticator as stauth
 
 # --------------------------
-# USER CREDENTIALS (DEMO - plain text)
+# USER CREDENTIALS (plain text for demo)
 # --------------------------
-# NOTE: plain-text credentials are for quick testing only.
+# NOTE: plain-text passwords are for quick testing only.
 credentials = {
     "usernames": {
         "admin": {
+            "email": "admin@example.com",   # required for v0.2.1
             "name": "Administrator",
-            "password": "admin123",   # demo password
+            "password": "admin123",         # demo password
             "role": "admin"
         },
         "bhavya": {
+            "email": "bhavya@example.com",  # required for v0.2.1
             "name": "Bhavya",
-            "password": "user123",    # demo password
+            "password": "user123",          # demo password
             "role": "user"
         }
     }
@@ -30,9 +32,8 @@ authenticator = stauth.Authenticate(
 )
 
 # --------------------------
-# LOGIN (v0.2.1 expects "main" or "sidebar" string)
+# LOGIN (use string "sidebar" for v0.2.1)
 # --------------------------
-# Using "sidebar" renders the form in the sidebar
 name, authentication_status, username = authenticator.login("Login", "sidebar")
 
 if authentication_status:
