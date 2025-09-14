@@ -3,21 +3,20 @@ import wikipedia
 import streamlit_authenticator as stauth
 
 # --------------------------
-# USER CREDENTIALS (hashed passwords)
+# USER CREDENTIALS (hashed, required in >=0.3.1)
 # --------------------------
-# To generate new hashes: 
-# >>> import streamlit_authenticator as stauth
-# >>> stauth.Hasher(["admin123", "user123"]).generate()
+# Generate with:
+#   stauth.Hasher(["admin123", "user123"]).generate()
 credentials = {
     "usernames": {
         "admin": {
             "name": "Administrator",
-            "password": "$2b$12$gA.0RhPaK0jvNhbbFoj7XOi7NUjN8IkYz3XzMmwFhtdl10EZw0rEy",  # hash for admin123
+            "password": "$2b$12$gA.0RhPaK0jvNhbbFoj7XOi7NUjN8IkYz3XzMmwFhtdl10EZw0rEy",
             "role": "admin"
         },
         "bhavya": {
             "name": "Bhavya",
-            "password": "$2b$12$sBj86ZqT6CM3KrHmkWAwKe/xMfRhCA7A5FKsoMRsYyPLAVBbk8AxC",  # hash for user123
+            "password": "$2b$12$sBj86ZqT6CM3KrHmkWAwKe/xMfRhCA7A5FKsoMRsYyPLAVBbk8AxC",
             "role": "user"
         }
     }
@@ -34,7 +33,7 @@ authenticator = stauth.Authenticate(
 )
 
 # --------------------------
-# LOGIN FORM
+# LOGIN FORM (new API uses keyword location="sidebar")
 # --------------------------
 name, authentication_status, username = authenticator.login("Login", location="sidebar")
 
@@ -44,9 +43,6 @@ if authentication_status:
     st.sidebar.success(f"✅ Welcome {name} ({role})")
     authenticator.logout("Logout", location="sidebar")
 
-    # --------------------------
-    # COMMON FEATURE: Chatbot
-    # --------------------------
     st.title("📚 Wikipedia Chatbot")
 
     if "messages" not in st.session_state:
@@ -57,9 +53,7 @@ if authentication_status:
             results = wikipedia.search(query)
             if not results:
                 return "Sorry, I couldn't find anything on that topic."
-            summary = wikipedia.summary(
-                results[0], sentences=2, auto_suggest=False, redirect=True
-            )
+            summary = wikipedia.summary(results[0], sentences=2, auto_suggest=False, redirect=True)
             return summary
         except wikipedia.DisambiguationError as e:
             return f"Your query is ambiguous, did you mean: {', '.join(e.options[:5])}?"
@@ -68,7 +62,6 @@ if authentication_status:
         except Exception:
             return "Oops, something went wrong."
 
-    # User input
     user_input = st.text_input("Ask me anything:")
 
     if user_input:
@@ -76,16 +69,12 @@ if authentication_status:
         bot_response = get_wikipedia_summary(user_input)
         st.session_state.messages.append({"role": "bot", "content": bot_response})
 
-    # Display chat history
     for msg in st.session_state.messages:
         if msg["role"] == "user":
             st.markdown(f"**You:** {msg['content']}")
         else:
             st.markdown(f"**Bot:** {msg['content']}")
 
-    # --------------------------
-    # EXTRA: Admin-only Section
-    # --------------------------
     if role == "admin":
         st.markdown("---")
         st.subheader("🔐 Admin Panel")
