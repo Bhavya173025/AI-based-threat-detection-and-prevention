@@ -3,21 +3,20 @@ import wikipedia
 import streamlit_authenticator as stauth
 
 # --------------------------
-# USER CREDENTIALS (plain text for quick testing)
+# USER CREDENTIALS (plain text for v0.2.1)
 # --------------------------
-# ⚠️ NOTE: Plain-text passwords are insecure. Use only for development/testing.
 credentials = {
     "usernames": {
         "admin": {
-            "email": "admin@example.com",  # required field
+            "email": "admin@example.com",
             "name": "Administrator",
-            "password": "admin123",        # plain text password
+            "password": "admin123",   # plain text password
             "role": "admin"
         },
         "bhavya": {
-            "email": "bhavya@example.com",  # required field
+            "email": "bhavya@example.com",
             "name": "Bhavya",
-            "password": "user123",          # plain text password
+            "password": "user123",    # plain text password
             "role": "user"
         }
     }
@@ -27,22 +26,22 @@ credentials = {
 # AUTHENTICATOR
 # --------------------------
 authenticator = stauth.Authenticate(
-    credentials=credentials,
-    cookie_name="threat_app",  # Cookie name
-    key="abcdef",              # Key for encryption
+    credentials,
+    "threat_app",   # cookie name
+    "abcdef",       # key
     cookie_expiry_days=1
 )
 
 # --------------------------
 # LOGIN FORM
 # --------------------------
-name, authentication_status, username = authenticator.login("Login", location="sidebar")
+name, authentication_status, username = authenticator.login("Login", "sidebar")
 
 if authentication_status:
     role = credentials["usernames"][username]["role"]
 
     st.sidebar.success(f"✅ Welcome {name} ({role})")
-    authenticator.logout("Logout", location="sidebar")
+    authenticator.logout("Logout", "sidebar")
 
     # --------------------------
     # MAIN FEATURE: Wikipedia Chatbot
@@ -82,7 +81,7 @@ if authentication_status:
             st.markdown(f"**Bot:** {msg['content']}")
 
     # --------------------------
-    # ADMIN PANEL (only visible for admin role)
+    # ADMIN PANEL
     # --------------------------
     if role == "admin":
         st.markdown("---")
