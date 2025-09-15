@@ -33,7 +33,7 @@ authenticator = stauth.Authenticate(
 # --------------------------
 # LOGIN FORM
 # --------------------------
-name, authentication_status, username = authenticator.login("Login", "sidebar")
+name, authentication_status, username = authenticator.login(fields={"form_name": "Login"}, location="sidebar")
 
 if authentication_status:
     st.sidebar.success(f"✅ Welcome {name}")
