@@ -3,20 +3,23 @@ import wikipedia
 import streamlit_authenticator as stauth
 
 # --------------------------
-# USER CREDENTIALS (hashed, required in >=0.3.1)
+# USER CREDENTIALS (hashed passwords, required in >=0.3.1)
 # --------------------------
-# Generate with:
+# To generate new hashes:
+#   import streamlit_authenticator as stauth
 #   stauth.Hasher(["admin123", "user123"]).generate()
 credentials = {
     "usernames": {
         "admin": {
+            "email": "admin@example.com",  # required
             "name": "Administrator",
-            "password": "$2b$12$gA.0RhPaK0jvNhbbFoj7XOi7NUjN8IkYz3XzMmwFhtdl10EZw0rEy",
+            "password": "$2b$12$gA.0RhPaK0jvNhbbFoj7XOi7NUjN8IkYz3XzMmwFhtdl10EZw0rEy",  # hash for admin123
             "role": "admin"
         },
         "bhavya": {
+            "email": "bhavya@example.com",  # required
             "name": "Bhavya",
-            "password": "$2b$12$sBj86ZqT6CM3KrHmkWAwKe/xMfRhCA7A5FKsoMRsYyPLAVBbk8AxC",
+            "password": "$2b$12$sBj86ZqT6CM3KrHmkWAwKe/xMfRhCA7A5FKsoMRsYyPLAVBbk8AxC",  # hash for user123
             "role": "user"
         }
     }
@@ -27,13 +30,13 @@ credentials = {
 # --------------------------
 authenticator = stauth.Authenticate(
     credentials=credentials,
-    cookie_name="threat_app",
-    key="abcdef",
+    cookie_name="threat_app",  # Cookie name
+    key="abcdef",              # Key for encryption
     cookie_expiry_days=1
 )
 
 # --------------------------
-# LOGIN FORM (new API uses keyword location="sidebar")
+# LOGIN FORM
 # --------------------------
 name, authentication_status, username = authenticator.login("Login", location="sidebar")
 
@@ -43,6 +46,9 @@ if authentication_status:
     st.sidebar.success(f"✅ Welcome {name} ({role})")
     authenticator.logout("Logout", location="sidebar")
 
+    # --------------------------
+    # MAIN FEATURE: Wikipedia Chatbot
+    # --------------------------
     st.title("📚 Wikipedia Chatbot")
 
     if "messages" not in st.session_state:
@@ -75,10 +81,13 @@ if authentication_status:
         else:
             st.markdown(f"**Bot:** {msg['content']}")
 
+    # --------------------------
+    # ADMIN PANEL (only visible for admin role)
+    # --------------------------
     if role == "admin":
         st.markdown("---")
         st.subheader("🔐 Admin Panel")
-        st.info("Admin-only area: add logs, user management, retrain model, etc.")
+        st.info("Admin-only area: logs, user management, retrain model, etc.")
 
 elif authentication_status is False:
     st.error("❌ Username/password is incorrect")
