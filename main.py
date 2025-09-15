@@ -10,14 +10,15 @@ credentials = {
     "usernames": {
         "admin": {
             "name": "Administrator",
-            "password": hashed_passwords   # <- Fix here!
+            "password": hashed_passwords[0]   # Correct: get the first hashed password string
         },
         "bhavya": {
             "name": "Bhavya",
-            "password": hashed_passwords[0]  # use index 0 for first password
+            "password": hashed_passwords[1]   # Correct: second hashed password string
         }
     }
 }
+
 
 # --------------------------
 # AUTHENTICATOR
