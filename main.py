@@ -3,19 +3,17 @@ import wikipedia
 import streamlit_authenticator as stauth
 
 # --------------------------
-# USER CREDENTIALS (plain text for v0.2.1)
+# USER CREDENTIALS (v0.2.1 requires plain text only)
 # --------------------------
 credentials = {
     "usernames": {
         "admin": {
             "name": "Administrator",
-            "password": "admin123",   # plain text password
-            "role": "admin"
+            "password": "admin123"
         },
         "bhavya": {
             "name": "Bhavya",
-            "password": "user123",    # plain text password
-            "role": "user"
+            "password": "user123"
         }
     }
 }
@@ -35,13 +33,10 @@ authenticator = stauth.Authenticate(
 # --------------------------
 name, authentication_status, username = authenticator.login("Login", "sidebar")
 
-# Debug (to see what’s happening if login fails)
 st.write("DEBUG:", authentication_status, username)
 
 if authentication_status:
-    role = credentials["usernames"][username]["role"]
-
-    st.sidebar.success(f"✅ Welcome {name} ({role})")
+    st.sidebar.success(f"✅ Welcome {name}")
     authenticator.logout("Logout", "sidebar")
 
     # --------------------------
@@ -80,14 +75,6 @@ if authentication_status:
             st.markdown(f"**You:** {msg['content']}")
         else:
             st.markdown(f"**Bot:** {msg['content']}")
-
-    # --------------------------
-    # ADMIN PANEL
-    # --------------------------
-    if role == "admin":
-        st.markdown("---")
-        st.subheader("🔐 Admin Panel")
-        st.info("Admin-only area: logs, user management, retrain model, etc.")
 
 elif authentication_status is False:
     st.error("❌ Username/password is incorrect")
