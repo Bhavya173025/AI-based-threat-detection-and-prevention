@@ -8,13 +8,11 @@ import streamlit_authenticator as stauth
 credentials = {
     "usernames": {
         "admin": {
-            "email": "admin@example.com",
             "name": "Administrator",
             "password": "admin123",   # plain text password
             "role": "admin"
         },
         "bhavya": {
-            "email": "bhavya@example.com",
             "name": "Bhavya",
             "password": "user123",    # plain text password
             "role": "user"
@@ -36,6 +34,9 @@ authenticator = stauth.Authenticate(
 # LOGIN FORM
 # --------------------------
 name, authentication_status, username = authenticator.login("Login", "sidebar")
+
+# Debug (to see what’s happening if login fails)
+st.write("DEBUG:", authentication_status, username)
 
 if authentication_status:
     role = credentials["usernames"][username]["role"]
