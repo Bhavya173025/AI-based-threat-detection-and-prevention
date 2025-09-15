@@ -3,17 +3,19 @@ import wikipedia
 import streamlit_authenticator as stauth
 
 # --------------------------
-# USER CREDENTIALS (v0.2.1 requires plain text only)
+# HASHED PASSWORDS
 # --------------------------
+hashed_passwords = stauth.Hasher(["admin123", "user123"]).generate()
+
 credentials = {
     "usernames": {
         "admin": {
             "name": "Administrator",
-            "password": "admin123"
+            "password": hashed_passwords[0]
         },
         "bhavya": {
             "name": "Bhavya",
-            "password": "user123"
+            "password": hashed_passwords[1]
         }
     }
 }
@@ -33,8 +35,6 @@ authenticator = stauth.Authenticate(
 # --------------------------
 name, authentication_status, username = authenticator.login("Login", "sidebar")
 
-st.write("DEBUG:", authentication_status, username)
-
 if authentication_status:
     st.sidebar.success(f"✅ Welcome {name}")
     authenticator.logout("Logout", "sidebar")
@@ -52,9 +52,7 @@ if authentication_status:
             results = wikipedia.search(query)
             if not results:
                 return "Sorry, I couldn't find anything on that topic."
-            summary = wikipedia.summary(
-                results[0], sentences=2, auto_suggest=False, redirect=True
-            )
+            summary = wikipedia.summary(results[0], sentences=2, auto_suggest=False, redirect=True)
             return summary
         except wikipedia.DisambiguationError as e:
             return f"Your query is ambiguous, did you mean: {', '.join(e.options[:5])}?"
