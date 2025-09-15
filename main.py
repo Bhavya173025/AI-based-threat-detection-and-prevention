@@ -3,23 +3,21 @@ import wikipedia
 import streamlit_authenticator as stauth
 
 # --------------------------
-# USER CREDENTIALS (hashed passwords, required in >=0.3.1)
+# USER CREDENTIALS (plain text for quick testing)
 # --------------------------
-# To generate new hashes:
-#   import streamlit_authenticator as stauth
-#   stauth.Hasher(["admin123", "user123"]).generate()
+# ⚠️ NOTE: Plain-text passwords are insecure. Use only for development/testing.
 credentials = {
     "usernames": {
         "admin": {
-            "email": "admin@example.com",  # required
+            "email": "admin@example.com",  # required field
             "name": "Administrator",
-            "password": "$2b$12$gA.0RhPaK0jvNhbbFoj7XOi7NUjN8IkYz3XzMmwFhtdl10EZw0rEy",  # hash for admin123
+            "password": "admin123",        # plain text password
             "role": "admin"
         },
         "bhavya": {
-            "email": "bhavya@example.com",  # required
+            "email": "bhavya@example.com",  # required field
             "name": "Bhavya",
-            "password": "$2b$12$sBj86ZqT6CM3KrHmkWAwKe/xMfRhCA7A5FKsoMRsYyPLAVBbk8AxC",  # hash for user123
+            "password": "user123",          # plain text password
             "role": "user"
         }
     }
@@ -59,7 +57,9 @@ if authentication_status:
             results = wikipedia.search(query)
             if not results:
                 return "Sorry, I couldn't find anything on that topic."
-            summary = wikipedia.summary(results[0], sentences=2, auto_suggest=False, redirect=True)
+            summary = wikipedia.summary(
+                results[0], sentences=2, auto_suggest=False, redirect=True
+            )
             return summary
         except wikipedia.DisambiguationError as e:
             return f"Your query is ambiguous, did you mean: {', '.join(e.options[:5])}?"
