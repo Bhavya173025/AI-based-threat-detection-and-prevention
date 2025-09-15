@@ -14,7 +14,7 @@ credentials = {
         },
         "bhavya": {
             "name": "Bhavya",
-            "password": hashed_passwords[2]
+            "password": hashed_passwords[0]  # use index 0 for first password
         }
     }
 }
