@@ -29,7 +29,6 @@ authenticator = stauth.Authenticate(
     "abcdef",       # key
     cookie_expiry_days=1
 )
-st.image("assets/img.png", width=100)
 # --------------------------
 # LOGIN PAGE TITLE
 # --------------------------
