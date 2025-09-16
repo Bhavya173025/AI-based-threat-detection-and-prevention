@@ -52,7 +52,6 @@ if authentication_status:
                 results = wikipedia.search(query)
                 if not results:
                     return "Sorry, I couldn't find anything on that topic."
-                # Use first search result
                 summary = wikipedia.summary(results[0], sentences=2, auto_suggest=False, redirect=True)
                 return summary
             except wikipedia.DisambiguationError as e:
@@ -76,10 +75,10 @@ if authentication_status:
 
     elif section == "Security Tools":
         st.title("🛡️ AI Threat Detection and Prevention")
-
         st.write("Check if a URL is safe using Google Safe Browsing API.")
 
-        api_key = "AIzaSyAmQzGudM0sZtB4I-hbn7iYVk-YmDegMyk"  # Replace with your API key
+        # Load API key securely from Streamlit secrets
+        api_key = st.secrets["AIzaSyAmQzGudM0sZtB4I-hbn7iYVk-YmDegMyk"]
 
         def check_url_safety(url):
             endpoint = "https://safebrowsing.googleapis.com/v4/threatMatches:find"
@@ -123,5 +122,5 @@ if authentication_status:
 else:
     if authentication_status == False:
         st.error("❌ Username/password is incorrect")
-    elif authentication_status == None:
+    elif authentication_status is None:
         st.warning("ℹ️ Please enter your username and password")
