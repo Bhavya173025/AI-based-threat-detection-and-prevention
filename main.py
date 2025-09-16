@@ -78,7 +78,8 @@ if authentication_status:
         st.write("Check if a URL is safe using Google Safe Browsing API.")
 
         # Load API key securely from Streamlit secrets
-        api_key = st.secrets["AIzaSyAmQzGudM0sZtB4I-hbn7iYVk-YmDegMyk"]
+        # Access the key like this:
+api_key = st.secrets["GOOGLE_SAFE_BROWSING_API_KEY"]
 
         def check_url_safety(url):
             endpoint = "https://safebrowsing.googleapis.com/v4/threatMatches:find"
