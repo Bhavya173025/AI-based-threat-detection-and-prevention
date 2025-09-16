@@ -54,4 +54,51 @@ if authentication_status:
                 results = wikipedia.search(query)
                 if not results:
                     return "Sorry, I couldn't find anything on that topic."
-                summary = wikipedia.summary(results[0],
+                summary = wikipedia.summary(results[0], sentences=2, auto_suggest=False, redirect=True)
+                return summary
+            except wikipedia.DisambiguationError as e:
+                return f"Your query is ambiguous, did you mean: {', '.join(e.options[:5])}?"
+            except wikipedia.PageError:
+                return "Sorry, I couldn't find a page matching your query."
+            except Exception:
+                return "Oops, something went wrong."
+
+        user_input = st.text_input("Ask me anything:")
+        if user_input:
+            st.session_state.messages.append({"role": "user", "content": user_input})
+            bot_response = get_wikipedia_summary(user_input)
+            st.session_state.messages.append({"role": "bot", "content": bot_response})
+
+        for msg in st.session_state.messages:
+            if msg["role"] == "user":
+                st.markdown(f"**You:** {msg['content']}")
+            else:
+                st.markdown(f"**Bot:** {msg['content']}")
+
+    elif section == "Security Tools":
+        st.title("🛡️ AI Threat Detection and Prevention")
+        st.write("Check if a URL is safe using Google Safe Browsing API.")
+
+        api_key = st.secrets["GOOGLE_SAFE_BROWSING_API_KEY"]
+
+        def check_url_safety(url):
+            endpoint = "https://safebrowsing.googleapis.com/v4/threatMatches:find"
+            body = {
+                "client": {
+                    "clientId": "sentinel-auth",
+                    "clientVersion": "1.0"
+                },
+                "threatInfo": {
+                    "threatTypes": [
+                        "MALWARE",
+                        "SOCIAL_ENGINEERING",
+                        "UNWANTED_SOFTWARE",
+                        "POTENTIALLY_HARMFUL_APPLICATION"
+                    ],
+                    "platformTypes": ["ANY_PLATFORM"],
+                    "threatEntryTypes": ["URL"],
+                    "threatEntries": [{"url": url}]
+                }
+            }
+            params = {"key": api_key}
+            response = requests.post(endpoint, params=params, json
