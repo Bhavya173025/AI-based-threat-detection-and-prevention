@@ -77,9 +77,8 @@ if authentication_status:
         st.title("🛡️ AI Threat Detection and Prevention")
         st.write("Check if a URL is safe using Google Safe Browsing API.")
 
-        # Load API key securely from Streamlit secrets
-        # Access the key like this:
-api_key = st.secrets["GOOGLE_SAFE_BROWSING_API_KEY"]
+        # Access the key securely from Streamlit secrets
+        api_key = st.secrets["GOOGLE_SAFE_BROWSING_API_KEY"]
 
         def check_url_safety(url):
             endpoint = "https://safebrowsing.googleapis.com/v4/threatMatches:find"
@@ -89,7 +88,12 @@ api_key = st.secrets["GOOGLE_SAFE_BROWSING_API_KEY"]
                     "clientVersion": "1.0"
                 },
                 "threatInfo": {
-                    "threatTypes": ["MALWARE", "SOCIAL_ENGINEERING", "UNWANTED_SOFTWARE", "POTENTIALLY_HARMFUL_APPLICATION"],
+                    "threatTypes": [
+                        "MALWARE",
+                        "SOCIAL_ENGINEERING",
+                        "UNWANTED_SOFTWARE",
+                        "POTENTIALLY_HARMFUL_APPLICATION"
+                    ],
                     "platformTypes": ["ANY_PLATFORM"],
                     "threatEntryTypes": ["URL"],
                     "threatEntries": [{"url": url}]
@@ -120,6 +124,7 @@ api_key = st.secrets["GOOGLE_SAFE_BROWSING_API_KEY"]
                 else:
                     st.error("⚠️ This URL is unsafe!")
                     st.json(details)
+
 else:
     if authentication_status == False:
         st.error("❌ Username/password is incorrect")
