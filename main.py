@@ -32,7 +32,6 @@ authenticator = stauth.Authenticate(
 # --------------------------
 # LOGIN PAGE TITLE
 # --------------------------
-st.image("img.jpg", width=100)
 st.title("Sentinel-Auth")
 
 # --------------------------
