@@ -29,6 +29,10 @@ authenticator = stauth.Authenticate(
     "abcdef",       # key
     cookie_expiry_days=1
 )
+# --------------------------
+# LOGIN PAGE TITLE
+# --------------------------
+st.title("Sentinel-Auth")
 
 # --------------------------
 # LOGIN FORM
